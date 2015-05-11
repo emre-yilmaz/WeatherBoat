@@ -1,5 +1,6 @@
+<meta http-equiv="Content-Type" content="text/HTML; charset=utf-8" />
 <?php
-$il= "Bursa";
+$il= "sakarya";
 $link ="http://havadurumu.com.tr/havadurumu/".$il;
 $parcala= '@<td style="text-align: center;">(.*?)</td>@si'; // 15 günlük hava raporu regex.
 
@@ -7,38 +8,49 @@ $botara=file_get_contents($link);
 preg_match_all($parcala,$botara,$ifade);
 
 
-echo "<pre>";
-print_r($ifade);
-echo "</pre>";
-
-
-
-
 $parcala2 = '@<td style="text-align: left;">(.*?)</td>@si';
 
 preg_match_all($parcala2,$botara,$ifade2);
 
 
-echo "<br/>";
 
-echo "<pre>";
-print_r($ifade2);
-echo "</pre>";
 
 $parcala3= '@<td>(.*?)</td>@si';
 preg_match_all($parcala3,$botara,$ifade3);
 
+
+
+$sayac=0;
+for($i=0;$i<30;$i++){
+
+	if($i%2==0){
+
+		$sicaklik[0][$sayac]=$ifade[0][$i];
+		$tarih[$sayac]=$ifade3[0][$i];
+		$sayac++;
+	}
+	else{
+		$sicaklik[1][$sayac]=$ifade[1][$i];
+	}
+
+}
+
+for($i=0; $i<15; $i++){
+
+	echo $tarih[$i]."<br/>"."Gündüz: ".$sicaklik[0][$i]." "."Durum:  ".$ifade2[0][$i]."<br/>"."Gece: ".$sicaklik[1][$i+1]."<br/>"."<br/>";
+}
+
 /*
-echo "<pre>";
-print_r($ifade3);
-echo "</pre>";
-*/
-
-echo $ifade3[0][0];
-
-//echo "Sehir: ".$il. " Gunduz: ".$ifade[0][0]. " Gece: ".$ifade[0][1]. " Durum: ".$ifade2[0][0];
-
-//echo $ifade[1][1];
+ * $sicaklik[ilk_indis][ikinci_indis]
+ * ilk indis :(0,1) 0 gündüz, 1 gece
+ * ikinci indis :(0-14) 1-15 arası günlerin sıcaklığı.
+ * ---------------------------------
+ * $tarih[indis]
+ * indis:(0-14) 1-15 arası günlerin tarihi.
+ * ---------------------------------
+ * $ifade2[0][indis]
+ * indis:(0-14) 1-15 arası gunlerin sıcaklık durum bilgisi.
+ */
 
 
 ?>
